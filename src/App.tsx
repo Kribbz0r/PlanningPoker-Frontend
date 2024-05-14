@@ -13,17 +13,18 @@ function App() {
   const [testUsers, setTestUsers] = useState<[User]>()
 
   useEffect(() => {
-    fetch("http://localhost:8080/test/test", {
+    fetch("https://goldfish-app-jlmay.ondigitalocean.app/test/test", {
       method: "GET",
       headers: {
-        "Origin": "http://localhost:5173/",
+        "Origin": "https://walrus-app-zcpnz.ondigitalocean.app/",
         "Content-Type": "application/json"
       },
     })
       .then(res => res.json())
       .then(data => {
         console.log(testUsers)
-        setTestUsers(data)}
+        setTestUsers(data)
+      }
       )
   }, [])
 
