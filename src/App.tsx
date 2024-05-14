@@ -1,31 +1,35 @@
 import { useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
+interface User {
+  "_id": string,
+  "email": string,
+  "name": string,
+  "authorized": number,
+  "role": string
+}
+
 function App() {
-  const [testUsers, setTestUsers] = useState<[string]>()
+  const [testUsers, setTestUsers] = useState<[User]>()
 
   useEffect(() => {
     fetch("http://localhost:8080/test/test", {
       method: "GET",
       headers: {
-        "Origin": "*",
+        "Origin": "http://localhost:5173/",
         "Content-Type": "application/json"
-        //"Access-Control-Allow-Origin": "*"
       },
     })
       .then(res => res.json())
-      .then(data => setTestUsers(data)
+      .then(data => {
+        console.log(testUsers)
+        setTestUsers(data)}
       )
   }, [])
 
   return (
     <>
-      <h1>{testUsers}</h1>
-
-
-
+      <h1>Hej {testUsers?.map(user => user.name).join(", ")}!</h1>
     </>
   )
 }
