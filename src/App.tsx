@@ -22,6 +22,7 @@ function App() {
   function handleSubmit(e: React.MouseEvent<HTMLButtonElement>, email: string, password: string): void {
     e.preventDefault();
 
+
     fetch("https://goldfish-app-jlmay.ondigitalocean.app/security/login", {
       method: "POST",
       headers: {
@@ -53,8 +54,10 @@ function App() {
     setLoginStatus(false)
   }
 
+
   return (
     <>
+
       <div className="header" >
         {loginStatus === true ? <div className="loggedInHeader">  <h1 className='loggedInHeaderText'>Planning Poker</h1> <button onClick={handleLogOut} className='logoutBtn'>Logga ut</button> </div> :
           <div className='loggedOutHeader'> <h1 className="loggedOutHeaderText">Planning Poker</h1></div>}
