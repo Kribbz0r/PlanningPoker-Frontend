@@ -9,13 +9,15 @@ interface User {
   "role": string
 }
 
+
+
 function App() {
-  const [username, setUsername] = useState<string>()
+  const [email, setEmail] = useState<string>('')
   const [testUsers, setTestUsers] = useState<[User]>()
-  const [password, setPassword] = useState<string>()
+  const [password, setPassword] = useState<string>('')
   const frontPageImg = "https://cdn.pixabay.com/photo/2022/10/31/13/50/aces-7559882_960_720.png"
 
-  useEffect(() => {
+  /*useEffect(() => {
     fetch("https://goldfish-app-jlmay.ondigitalocean.app/test/test", {
       method: "GET",
       headers: {
@@ -30,11 +32,35 @@ function App() {
       }
       )
   }, [])
+*/
+  function handleSubmit(e: React.MouseEvent<HTMLButtonElement>, email: string, password: string): void {
+    e.preventDefault();
+   
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>): void {
-    event.preventDefault();
-   //fetch("https://goldfish-app-jlmay.ondigitalocean.app/test/test")
-   alert("Jag är ett fromulär" + username + password)
+    fetch("https://goldfish-app-jlmay.ondigitalocean.app/security/login", { 
+      method: "POST",
+      headers: {"content-type": "application/json",
+      "Origin":"*"
+      }, 
+      body: JSON.stringify({"email": email, "password":password})
+    })
+    .then(res=>{
+      if (res.ok){
+      res.json()
+        .then(data=>{   
+        console.log(data.token)
+        
+          console.log("Hejsan data.token")
+          const token = data.token
+          localStorage.setItem('jsonwebtoken', token)
+        
+
+        })
+    
+        } else {
+          console.log("res är =" + res)
+        }
+})
   }
 
   return (
@@ -45,13 +71,13 @@ function App() {
     
       <div className="body"> 
       <img src={frontPageImg} className="frontPageImg"/>
-        <form onSubmit ={handleSubmit} className="login" >
-          <input type="text" value={username} onChange= {((e)=> setUsername(e.target.value))}></input>
+       <div className="login"> 
+          <input type="text" value={email} onChange= {((e)=> setEmail(e.target.value))}></input>
           <input type="text" value={password} onChange= {((e)=> setPassword(e.target.value))}></input>
-          <button type="submit">Logga in</button>
-          
-        </form>
-      </div>
+          <button type="submit" onClick={(e)=> handleSubmit(e, email, password)}>Logga in</button>
+          </div> 
+          </div>
+    
         
     </>
   )
