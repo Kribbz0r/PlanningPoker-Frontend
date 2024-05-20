@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 import './App.css'
 
 interface User {
@@ -10,7 +10,10 @@ interface User {
 }
 
 function App() {
+  const [username, setUsername] = useState<string>()
   const [testUsers, setTestUsers] = useState<[User]>()
+  const [password, setPassword] = useState<string>()
+  const frontPageImg = "https://cdn.pixabay.com/photo/2022/10/31/13/50/aces-7559882_960_720.png"
 
   useEffect(() => {
     fetch("https://goldfish-app-jlmay.ondigitalocean.app/test/test", {
@@ -28,9 +31,28 @@ function App() {
       )
   }, [])
 
+  function handleSubmit(event: FormEvent<HTMLFormElement>): void {
+    event.preventDefault();
+   //fetch("https://goldfish-app-jlmay.ondigitalocean.app/test/test")
+   alert("Jag är ett fromulär")
+  }
+
   return (
     <>
-      <h1>Hej {testUsers?.map(user => user.name).join(", ")}!</h1>
+      <div className="header">
+        <h1>Planning Poker</h1>
+      </div>
+    
+      <div className="body"> 
+      <img src={frontPageImg} className="frontPageImg"/>
+        <form onSubmit ={handleSubmit} className="login" >
+          <input type="text" value={username} onChange= {((e)=> setUsername(e.target.value))}></input>
+          <input type="text" value={password} onChange= {((e)=> setPassword(e.target.value))}></input>
+          <button type="submit">Logga in</button>
+          
+        </form>
+      </div>
+        
     </>
   )
 }
