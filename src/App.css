@@ -1,42 +1,55 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+.frontPageImg {
+  width: 230px;
+  height: auto;
+}
+
+.header {
+  background-color: aquamarine;
+  width: 100vw;
+  height: 15vh;
+  display: flex;
+  text-align: center;
+  justify-content: flex-start;
+}
+
+.loggedOutHeader {
+  width: 100vw;
+  display: flex;
+  justify-content: space-evenly;
+  align-self: center;
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.loggedOutHeaderText {}
+
+.loggedInHeader {
+  width: 100vw;
+  align-self: center;
+  display: flex;
+  text-align: center;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.loggedInHeaderText {
+  width: 70vw;
+  margin-left: 15vw;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.logoutBtn {
+  align-self: center;
+  color: aqua;
+  width: 10vw;
+  margin-right: 5vw;
+  justify-content: end;
 }
 
-.card {
-  padding: 2em;
+.loginForm {
+  display: grid;
 }
 
-.read-the-docs {
-  color: #888;
+.body {
+  background-color: burlywood;
+  display: flex;
+  height: 85vh;
+  align-items: center;
+  justify-content: space-evenly;
 }
