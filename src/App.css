@@ -3,6 +3,7 @@
   height: auto;
 }
 
+
 .header {
   background-color: aquamarine;
   width: 100vw;
@@ -52,4 +53,5 @@
   height: 85vh;
   align-items: center;
   justify-content: space-evenly;
+
 }
