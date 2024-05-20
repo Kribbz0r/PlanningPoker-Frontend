@@ -34,13 +34,13 @@ function App() {
   function handleSubmit(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();
    //fetch("https://goldfish-app-jlmay.ondigitalocean.app/test/test")
-   alert("Jag är ett fromulär")
+   alert("Jag är ett fromulär" + username + password)
   }
 
   return (
     <>
       <div className="header">
-        <h1>Planning Poker</h1>
+        <h1 className="header-text">Planning Poker</h1>
       </div>
     
       <div className="body"> 

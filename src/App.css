@@ -1,25 +1,29 @@
 .frontPageImg {
   width: 230px;
-  height:auto;
+  height: auto;
 }
 
 .login {
-  display:grid;
+  display: grid;
 }
 
 .body {
   background-color: burlywood;
   display: flex;
-  height: 100vh;
+  height: 85vh;
+  align-items: center;
+  justify-content: space-evenly;
+
 }
 
 .header h1 {
-text-align: center;
-  
+  width: 100vw;
 }
 
 .header {
   background-color: aquamarine;
   width: 100vw;
+  height: 15vh;
   display: flex;
+  text-align: center;
 }
