@@ -59,6 +59,7 @@ useEffect (() => {
             }
             return res.text();
           }).then(data => {
+            console.log(data);
             getUsers();
           }).catch((error) => {
             console.log(error)
