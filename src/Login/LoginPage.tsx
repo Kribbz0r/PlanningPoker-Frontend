@@ -7,7 +7,6 @@ interface LoginPageProps {
 }
 
 
-
 function LoginPage({ onLogin }: LoginPageProps) {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');

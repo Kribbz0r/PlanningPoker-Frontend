@@ -11,7 +11,6 @@ function App() {
     localStorage.clear()
     setLoginStatus(false)
   }
-  
 
   function handleLogin(): void {
     setLoginStatus(true);
