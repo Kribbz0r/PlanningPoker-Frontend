@@ -4,6 +4,7 @@ import LoginPage from './Login/LoginPage';
 
 
 function App() {
+
   const [loginStatus, setLoginStatus] = useState<boolean>(false);
 
   
@@ -16,9 +17,9 @@ function App() {
     setLoginStatus(true);
   }
 
-
   return (
     <>
+
       <div className="header" >
         {loginStatus === true ? 
         <div className="loggedInHeader">  
