@@ -1,17 +1,17 @@
 import { useState } from 'react';
 import './App.css';
-import LoginPage from './Bodies/LoginPage';
+import LoginPage from './Login/LoginPage';
 
 
 function App() {
   const [loginStatus, setLoginStatus] = useState<boolean>(false);
 
   
-  
   function handleLogOut(): void {
     localStorage.clear()
     setLoginStatus(false)
   }
+  
 
   function handleLogin(): void {
     setLoginStatus(true);
