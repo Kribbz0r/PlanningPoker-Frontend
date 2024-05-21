@@ -41,7 +41,6 @@ function User() {
         }
         return res.json();
       }).then(data => {
-        console.log(data);
         setUserAuthority(data.role);
         setUsername(data.name);
       }).catch((error) => {
