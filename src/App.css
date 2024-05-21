@@ -3,7 +3,48 @@
   height: auto;
 }
 
-.login {
+
+.header {
+  background-color: aquamarine;
+  width: 100vw;
+  height: 15vh;
+  display: flex;
+  text-align: center;
+  justify-content: flex-start;
+}
+
+.loggedOutHeader {
+  width: 100vw;
+  display: flex;
+  justify-content: space-evenly;
+  align-self: center;
+  text-align: center;
+}
+
+.loggedOutHeaderText {}
+
+.loggedInHeader {
+  width: 100vw;
+  align-self: center;
+  display: flex;
+  text-align: center;
+}
+
+.loggedInHeaderText {
+  width: 70vw;
+  margin-left: 15vw;
+}
+
+
+.logoutBtn {
+  align-self: center;
+  color: aqua;
+  width: 10vw;
+  margin-right: 5vw;
+  justify-content: end;
+}
+
+.loginForm {
   display: grid;
 }
 
@@ -14,16 +55,4 @@
   align-items: center;
   justify-content: space-evenly;
 
-}
-
-.header h1 {
-  width: 100vw;
-}
-
-.header {
-  background-color: aquamarine;
-  width: 100vw;
-  height: 15vh;
-  display: flex;
-  text-align: center;
 }
