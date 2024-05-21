@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import './App.css';
 import LoginPage from './Login/LoginPage';
+import User from './user/User';
 
 
 function App() {
@@ -19,7 +20,6 @@ function App() {
 
   return (
     <>
-
       <div className="header" >
         {loginStatus === true ? 
         <div className="loggedInHeader">  
@@ -34,8 +34,8 @@ function App() {
       </div>
       <div className="body">
         {loginStatus === false ? <LoginPage onLogin={handleLogin} /> : null}
+        {loginStatus === true ? <User /> : null}
       </div>
-
     </>
   )
 }
