@@ -17,13 +17,16 @@ function CreateNewProject() {
     }
     }, []);
 
-    const handleClick = (e: { preventDefault: () => void; }) => {
+    const handleSubmit = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
         if (projectCreated === true) {
-            submitNewTaskFetch();
+            let updatedTaskList: string[] = taskList;
+            updatedTaskList.push(taskName);
+            setTaskList(updatedTaskList);
             setTaskName("");
         } else {
-            createNewProjectFetch();
+            setProjectCreated(true);
+            setMessage("Project name " + projectName + " confirmed, now add your tasks.")
         }
     }
 
@@ -40,15 +43,12 @@ function CreateNewProject() {
               new Error("Unable to create project");
             }
             return res.text();
-          }).then(data => {
-            setMessage(data);
-            setProjectCreated(true)
           }).catch((error) => {
             console.log(error)
           });
     }
 
-    async function submitNewTaskFetch() {
+    async function submitNewTaskFetch(taskName: string) {
         const fetchHTTP: string = "https://goldfish-app-jlmay.ondigitalocean.app/tasks/new-task";
         await fetch(fetchHTTP, {
             method: "POST",
@@ -61,34 +61,43 @@ function CreateNewProject() {
             if(!res.ok) {
               new Error("Unable to submit task.");
             }
-            return res.text();
-          }).then(data => {
-            setMessage(data);
-            let updatedTaskList: string[] = taskList;
-            updatedTaskList.push(taskName);
-            setTaskList(updatedTaskList);
+            return res.text();            
           }).catch((error) => {
             console.log(error)
           });
     }
 
+    async function handleReleaseProjectClick(): Promise<void> {
+        await createNewProjectFetch();
+        taskList.map((taskName: string) => (
+            submitNewTaskFetch(taskName)
+        ));
+        setProjectCreated(false);
+        setProjectName("");
+        setTaskList([]);
+        setTaskName("");
+        setMessage("");
+    }
+
     return (
         <>
-            {!projectCreated ? <form onSubmit={(e) => handleClick(e)}>
+            <p>{message}</p>
+            {!projectCreated ? <form onSubmit={(e) => handleSubmit(e)}>
                 <h3>Create New Project</h3>
                 <input placeholder="Project Name" value={projectName} onChange={((e) => setProjectName(e.target.value))}/>
                 <button type="submit">Submit</button>
             </form>  : 
-            <form onSubmit={(e) => handleClick(e)}>
+            <form onSubmit={(e) => handleSubmit(e)}>
                 <input className="taskInput" placeholder="task" value={taskName} onChange={((e) => setTaskName(e.target.value))}/>
                 <button type="submit">Add task</button>
             </form>}
-            <p>{message}</p>
             <ul>
             { taskList.length > 0 ? taskList.map((taskName: string) => (
-                    <li>{taskName}</li>
-                )) : null}
+                <li key={taskName}>{taskName}</li>
+            )) : null}
             </ul>
+            { taskList.length > 0 ? <button type="button" onClick={handleReleaseProjectClick}>Release Project</button> : null}
+            
         </>
     );
 }
