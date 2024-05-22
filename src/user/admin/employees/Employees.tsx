@@ -41,8 +41,6 @@ useEffect (() => {
     }).then(data => {
       const parsedData: User[]=data
       setEmployeesList(parsedData); 
-      console.log(employeesList) 
-      console.log("Hallåååå!!")
     }).catch((error) => {
       console.log(error)
     });
@@ -61,15 +59,13 @@ useEffect (() => {
             }
             return res.text();
           }).then(data => {
-            console.log(data)
+            console.log(data);
             getUsers();
           }).catch((error) => {
             console.log(error)
           });
            
 }
-
-
 
     return (
         <div>
@@ -83,7 +79,7 @@ useEffect (() => {
                 </thead>
                 <tbody>
                     {employeesList?.map((user:User)=>(
-                        <tr>
+                        <tr key={user.email}>
                             <td>{user.name}</td>
                             <td>{user.email}</td>
                             <td>{user.authorized===0?<button onClick={()=>handleClick(user.email)}>Go</button>:
