@@ -41,8 +41,6 @@ useEffect (() => {
     }).then(data => {
       const parsedData: User[]=data
       setEmployeesList(parsedData); 
-    }).catch((error) => {
-      console.log(error)
     });
    }
 
@@ -58,11 +56,8 @@ useEffect (() => {
               new Error("Unable to update user access!");
             }
             return res.text();
-          }).then(data => {
-            console.log(data);
+          }).then(() => {
             getUsers();
-          }).catch((error) => {
-            console.log(error)
           });
            
 }

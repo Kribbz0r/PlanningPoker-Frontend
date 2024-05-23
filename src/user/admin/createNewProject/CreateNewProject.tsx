@@ -38,14 +38,7 @@ function CreateNewProject() {
                 "Authorization": jwtToken,
                 "projectName": projectName,
             }
-        }).then(res => {
-            if(!res.ok) {
-              new Error("Unable to create project");
-            }
-            return res.text();
-          }).catch((error) => {
-            console.log(error)
-          });
+        }).then(res => res.text())
     }
 
     async function submitNewTaskFetch(taskName: string) {
@@ -59,14 +52,7 @@ function CreateNewProject() {
                     "projectName": projectName,
                     "taskName": taskName
                 }
-            }).then(res => {
-                if(!res.ok) {
-                  new Error("Unable to submit task.");
-                }
-                return res.text();            
-              }).catch((error) => {
-                console.log(error)
-              });
+            }).then(res => res.text());
         }
     }
 

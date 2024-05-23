@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
 import TaskColumn from './taskColumn/TaskColumn';
 import "./tasks.css";
+import TaskColumnUser from './taskColumnUser/TaskColumnUser';
 
 interface Props {
     projectSelected: string
+    authority: string
 }
 
 interface Task {
@@ -14,9 +16,10 @@ interface Task {
     "finalTime": number,
     "votes": number,
     "approvalvotes": number,
-    "suggestedTimes": number[],
-    "userthathavevoted": string[],
-    "disapproved": boolean
+    "suggestedTimes": string[],
+    "usersthathavevoted": string[],
+    "disapproved": boolean,
+    "usersthathaveapproved": string[]
 }
 
 function Tasks(props: Props) {
@@ -38,7 +41,6 @@ function Tasks(props: Props) {
     }, []);
 
     useEffect (() => {
-        console.log(updatePage)
         getTasks();
     }, [jwtToken, props.projectSelected, updatePage]);
 
@@ -80,21 +82,10 @@ function Tasks(props: Props) {
                 setMessage(errorList);
             })
         })
-        }).catch((error) => {
-            console.log(error)
         });
     }
 
-    useEffect(() => {
-        console.log(underVoteTasks);
-        console.log(needAttentionTasks);
-        console.log(inProgressTasks);
-        console.log(completeTasks);
-        console.log(message);
-    }, [underVoteTasks])
-
     const updateTaskView = () => {
-        console.log(updatePage)
         setUpdatePage(prevUpdatePage => !prevUpdatePage)
     }
 
@@ -103,10 +94,10 @@ function Tasks(props: Props) {
     <h2>{props.projectSelected}</h2>
     { message[0] !== null ? <p>{message}</p> : null}
     <div id='taskColumnsDiv'>
-        <TaskColumn taskList={underVoteTasks} columnStatus="Under Vote" projectName={props.projectSelected} updateTaskView={updateTaskView}/>
-        <TaskColumn taskList={needAttentionTasks} columnStatus="Needs Attention" projectName={props.projectSelected} updateTaskView={updateTaskView}/>
-        <TaskColumn taskList={inProgressTasks} columnStatus="In Progress" projectName={props.projectSelected} updateTaskView={updateTaskView}/>
-        <TaskColumn taskList={completeTasks} columnStatus="Complete" projectName={props.projectSelected} updateTaskView={updateTaskView}/>
+        {props.authority === "66446a0b97b346b20fd35b73" ? <TaskColumn taskList={underVoteTasks} columnStatus="Under Vote" projectName={props.projectSelected} updateTaskView={updateTaskView}/> : <TaskColumnUser taskList={underVoteTasks} columnStatus="Under Vote" projectName={props.projectSelected} updateTaskView={updateTaskView}/>}
+        {props.authority === "66446a0b97b346b20fd35b73" ? <TaskColumn taskList={needAttentionTasks} columnStatus="Needs Attention" projectName={props.projectSelected} updateTaskView={updateTaskView}/> : null }
+        {props.authority === "66446a0b97b346b20fd35b73" ? <TaskColumn taskList={inProgressTasks} columnStatus="In Progress" projectName={props.projectSelected} updateTaskView={updateTaskView}/> : <TaskColumnUser taskList={inProgressTasks} columnStatus="In Progress" projectName={props.projectSelected} updateTaskView={updateTaskView}/>}
+        {props.authority === "66446a0b97b346b20fd35b73" ? <TaskColumn taskList={completeTasks} columnStatus="Complete" projectName={props.projectSelected} updateTaskView={updateTaskView}/> : <TaskColumnUser taskList={completeTasks} columnStatus="Complete" projectName={props.projectSelected} updateTaskView={updateTaskView}/>}
     </div>
     </>
   )
