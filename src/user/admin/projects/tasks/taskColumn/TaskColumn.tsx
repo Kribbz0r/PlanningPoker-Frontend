@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import "./taskColumn.css";
 
 interface Props {
     taskList: Task[]
     columnStatus: string
-    getTasks: () => void
+    updateTaskView: () => void
     projectName: string
 }
 
@@ -12,19 +12,21 @@ interface Task {
     "_id": string,
     "task": string,
     "status": string,
-    "estimatedtime": number,
-    "finaltime": number,
+    "estimatedTime": number,
+    "finalTime": number,
     "votes": number,
     "approvalvotes": number,
-    "suggestedtimes": number[],
+    "suggestedTimes": number[],
     "userthathavevoted": string[],
     "disapproved": boolean
 }
 
 function TaskColumn(props: Props) {
 
-    const [estimatedTime, setEstimatedTime] = useState<string>("")
+    const [estimatedTime, setEstimatedTime] = useState<{[key: string]: string}>({});
     const [jwtToken, setJwtToken] = useState<string>("");
+    const [finalTime, setFinalTime] = useState<{[key: string]: string}>({});
+    const [totalVotes, setTotalVotes] = useState<string>("");
 
     useEffect (() => {
         let jsonwebtoken: string | null = "";
@@ -34,7 +36,38 @@ function TaskColumn(props: Props) {
         }
     }, []);
 
-    const handleSetTimeClick = (task: Task) => {       
+    useEffect (() => {
+        getTotalVotes();
+    }, [jwtToken])
+    
+    const getTotalVotes = () => {
+        console.log(jwtToken);
+        const fetchHTTP = "https://goldfish-app-jlmay.ondigitalocean.app/user/number-with-access";
+        fetch(fetchHTTP, {
+            method: "GET",
+            headers: {
+                "Authorization": jwtToken
+            }
+        }).then(res => {
+            if(!res.ok) {
+                new Error("Unable to update estimated time");
+            }
+            return res.text();
+            }).then(data => {
+              console.log(data);
+              setTotalVotes(data);
+          }).catch((error) => {
+              console.log(error)
+          });
+    }
+
+    const handleSetTimeClick = (task: Task, ) => {       
+        // const id = task._id
+        // if (task.estimatedTime !== null) {
+        //     setEstimatedTime({id, value})
+        // }
+
+        console.log(estimatedTime[task._id])
     
         const fetchHTTP = "https://goldfish-app-jlmay.ondigitalocean.app/tasks/edit-task";
         fetch(fetchHTTP, {
@@ -49,11 +82,11 @@ function TaskColumn(props: Props) {
                 "taskId": task._id,
                 "task": task.task,
                 "status": task.status,
-                "estimatedTime": estimatedTime,
-                "finalTime": task.finaltime,
+                "estimatedTime": task.estimatedTime !== null ? task.estimatedTime : estimatedTime[task._id],
+                "finalTime": finalTime === null ? task.finalTime : finalTime[task._id],
                 "votes": task.votes,
                 "approvalvotes": task.approvalvotes,
-                "suggestedTimes": task.suggestedtimes,
+                "suggestedTimes": task.suggestedTimes,
                 "usersthathavevoted": task.userthathavevoted,
                 "disapproved": task.disapproved
             })
@@ -66,10 +99,18 @@ function TaskColumn(props: Props) {
             }
           }).then(data => {
             console.log(data);
-            props.getTasks();
-          }).catch((error) => {
+        }).catch((error) => {
+            props.updateTaskView();
+            setEstimatedTime({})
+            setFinalTime({});
             console.log(error)
-          });
+        });
+    }
+
+    function handleInputChange(_id: string, value: string, setEstimatedTime: Dispatch<SetStateAction<{ [key: string]: string; }>>): void {
+        setEstimatedTime((prevEstimatedTime) => ({
+            ...prevEstimatedTime, [_id]: value
+        }));
     }
 
   return (
@@ -91,8 +132,8 @@ function TaskColumn(props: Props) {
                 <tbody>
                     <tr className="tasktTableRows">
                         <td>{task.task}</td>
-                        <td>{task.votes}</td>
-                        <td>{task.approvalvotes}</td>
+                        <td style={{color: task.votes.toString() !== totalVotes ? "red": "green"}}>{task.votes} / {totalVotes}</td>
+                        <td style={{color: task.approvalvotes.toString() !== totalVotes ? "red": "green"}}>{task.approvalvotes} / {totalVotes}</td>
                     </tr>
                 </tbody>))}
             </table> :
@@ -111,7 +152,7 @@ function TaskColumn(props: Props) {
                         <tr className="tasktTableRows">
                             <td>{task.task}</td>
                             <td>
-                            {task.suggestedtimes.map((time: number) => (
+                            {task.suggestedTimes.map((time: number) => (
                                 <span key={time}>{time} hours<br/></span>
                             ))}
                             </td>
@@ -121,7 +162,7 @@ function TaskColumn(props: Props) {
                             ))}
                             </td>
                             <td>
-                                <input placeholder="set estimated time" value={estimatedTime} onChange={(e)=> setEstimatedTime(e.target.value)}/>
+                                <input placeholder="set estimated time" value={estimatedTime[task._id] || ""} onChange={(e)=> handleInputChange(task._id, e.target.value, setEstimatedTime)}/>
                                 <button type="button" onClick={() => handleSetTimeClick(task)}>Set</button>
                             </td>
                         </tr>
@@ -133,8 +174,8 @@ function TaskColumn(props: Props) {
                      <thead>
                          <tr className="tasktTableRows">
                              <td>Task</td>
-                             <td>Suggested Times</td>
                              <td>Users</td>
+                             <td>Estimated Time</td>
                          </tr>
                      </thead>
                  {props.taskList.map((task:Task) => (
@@ -142,19 +183,46 @@ function TaskColumn(props: Props) {
                      <tr className="tasktTableRows">
                          <td>{task.task}</td>
                          <td>
-                         {task.suggestedtimes.map((time: number) => (
-                             <span key={time}>{time} hours<br/></span>
+                         {task.userthathavevoted.map((user: string) => (
+                             <span key={user}>{user}<br/></span>
                          ))}
                          </td>
+                         <td>{task.estimatedTime} hours</td>
+                         <td>
+                            <input placeholder="set final time" value={finalTime[task._id]} onChange={(e)=> handleInputChange(task._id, e.target.value, setFinalTime)}/>
+                            <button type="button" onClick={() => handleSetTimeClick(task)}>Set</button>
+                        </td>
+                     </tr>
+                 </tbody>))}
+             </table> : 
+             props.columnStatus === "Complete" ? 
+             <table className="taskTables">
+                     <thead>
+                         <tr className="tasktTableRows">
+                             <td>Task</td>
+                             <td>Users</td>
+                             <td>Estimated Time</td>
+                             <td>Final Time</td>
+                             <td>Time Difference</td>
+                         </tr>
+                     </thead>
+                 {props.taskList.map((task:Task) => (
+                 <tbody>
+                     <tr className="tasktTableRows">
+                         <td>{task.task}</td>
                          <td>
                          {task.userthathavevoted.map((user: string) => (
                              <span key={user}>{user}<br/></span>
                          ))}
                          </td>
-                         <td>{task.estimatedtime}</td>
+                         <td>{task.estimatedTime} hours</td>
+                         <td>{task.finalTime} hours</td>
+                         <td style={{ color: task.estimatedTime >= task.finalTime ? "green" : "red"}}>
+                         {Math.round(((task.finalTime - task.estimatedTime) / task.estimatedTime) * 100)}%
+                         </td>
                      </tr>
-                 </tbody>))}
-             </table> : null }
+                 </tbody>))} 
+                </table> : null}
             </>
     </div>
   )

@@ -10,11 +10,11 @@ interface Task {
     "_id": string,
     "task": string,
     "status": string,
-    "estimatedtime": number,
-    "finaltime": number,
+    "estimatedTime": number,
+    "finalTime": number,
     "votes": number,
     "approvalvotes": number,
-    "suggestedtimes": number[],
+    "suggestedTimes": number[],
     "userthathavevoted": string[],
     "disapproved": boolean
 }
@@ -38,8 +38,9 @@ function Tasks(props: Props) {
     }, []);
 
     useEffect (() => {
+        console.log(updatePage)
         getTasks();
-    }, [jwtToken, props.projectSelected]);
+    }, [jwtToken, props.projectSelected, updatePage]);
 
     const getTasks = () => {
         const fetchHTTP: string = "https://goldfish-app-jlmay.ondigitalocean.app/user/tasks";
@@ -93,22 +94,19 @@ function Tasks(props: Props) {
     }, [underVoteTasks])
 
     const updateTaskView = () => {
+        console.log(updatePage)
         setUpdatePage(prevUpdatePage => !prevUpdatePage)
     }
-
-    useEffect (() => {
-        getTasks()
-    }, [updatePage])
 
   return (
     <>
     <h2>{props.projectSelected}</h2>
     { message[0] !== null ? <p>{message}</p> : null}
     <div id='taskColumnsDiv'>
-        <TaskColumn taskList={underVoteTasks} columnStatus="Under Vote" projectName={props.projectSelected} getTasks={updateTaskView}/>
-        <TaskColumn taskList={needAttentionTasks} columnStatus="Needs Attention" projectName={props.projectSelected} getTasks={updateTaskView}/>
-        <TaskColumn taskList={inProgressTasks} columnStatus="In Progress" projectName={props.projectSelected} getTasks={updateTaskView}/>
-        <TaskColumn taskList={completeTasks} columnStatus="Complete" projectName={props.projectSelected} getTasks={updateTaskView}/>
+        <TaskColumn taskList={underVoteTasks} columnStatus="Under Vote" projectName={props.projectSelected} updateTaskView={updateTaskView}/>
+        <TaskColumn taskList={needAttentionTasks} columnStatus="Needs Attention" projectName={props.projectSelected} updateTaskView={updateTaskView}/>
+        <TaskColumn taskList={inProgressTasks} columnStatus="In Progress" projectName={props.projectSelected} updateTaskView={updateTaskView}/>
+        <TaskColumn taskList={completeTasks} columnStatus="Complete" projectName={props.projectSelected} updateTaskView={updateTaskView}/>
     </div>
     </>
   )

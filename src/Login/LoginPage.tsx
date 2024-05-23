@@ -19,25 +19,27 @@ function LoginPage({ onLogin }: LoginPageProps) {
         fetch("https://goldfish-app-jlmay.ondigitalocean.app/security/login", {
             method: "POST",
             headers: {
-            "content-type": "application/json",
+            "Content-Type": "application/json",
             "Origin": "*"
             },
-            body: JSON.stringify({ email, password })
+            body: JSON.stringify({ 
+                "email": email, 
+                "password": password })
         })
         .then(res => {
-            if (res.ok) {
-                res.text()
-                .then(data => {
-                    const token = data
-                    localStorage.setItem('jsonwebtoken', token)
-                    onLogin(token);
-                    setEmail("")
-                    setPassword("")
-                })
-            } else {
-                setError("Incorrect username or password");
+            if (!res.ok) {
+                new Error("Incorrect username or password");
             }
-        })
+            return res.text()
+        }).then(data => {
+            const token = data
+            localStorage.setItem('jsonwebtoken', token)
+            onLogin(token);
+            setEmail("")
+            setPassword("")
+        }).catch((error) => {
+            setError(error)
+        });
     }
 
     return (
