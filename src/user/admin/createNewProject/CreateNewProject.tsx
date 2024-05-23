@@ -19,14 +19,16 @@ function CreateNewProject() {
 
     const handleSubmit = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
-        if (projectCreated === true) {
+        if (projectCreated === true && taskName.trim() !== "") {
             let updatedTaskList: string[] = taskList;
             updatedTaskList.push(taskName);
             setTaskList(updatedTaskList);
             setTaskName("");
-        } else {
+        } else if (projectName.trim() !== ""){
             setProjectCreated(true);
             setMessage("Project name " + projectName + " confirmed, now add your tasks.")
+        } else {
+            setMessage("You can't submit blank values!")
         }
     }
 
@@ -68,6 +70,11 @@ function CreateNewProject() {
         setMessage("");
     }
 
+    function handleRemoveTaskClick(taskName: string): void {
+        let updatedTaskList = taskList.filter(task => task !== taskName)
+        setTaskList(updatedTaskList);
+    }
+
     return (
         <>
             <p>{message}</p>
@@ -80,13 +87,15 @@ function CreateNewProject() {
                 <input className="taskInput" placeholder="task" value={taskName} onChange={((e) => setTaskName(e.target.value))}/>
                 <button type="submit">Add task</button>
             </form>}
-            <ul>
+            <table>
             { taskList.length > 0 ? taskList.map((taskName: string) => (
-                <li key={taskName}>{taskName}</li>
+                <tr>
+                    <td key={taskName}>{taskName}</td>
+                    <td key={"remove" + taskName} onClick={() => handleRemoveTaskClick(taskName)}>X</td>
+                </tr>
             )) : null}
-            </ul>
-            { taskList.length > 0 ? <button type="button" onClick={handleReleaseProjectClick}>Release Project</button> : null}
-            
+            </table>
+            { taskList.length > 0 ? <button type="button" onClick={handleReleaseProjectClick}>Release Project</button> : null}            
         </>
     );
 }

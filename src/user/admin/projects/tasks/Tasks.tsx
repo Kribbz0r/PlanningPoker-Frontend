@@ -31,6 +31,7 @@ function Tasks(props: Props) {
     const [message, setMessage] = useState<string[]>([])
     const [jwtToken, setJwtToken] = useState<string>("");
     const [updatePage, setUpdatePage] = useState<boolean>(false)
+    const [archived, setArchived] = useState<boolean>(false);
     
     useEffect (() => {
         let jsonwebtoken: string | null = "";
@@ -89,6 +90,30 @@ function Tasks(props: Props) {
         setUpdatePage(prevUpdatePage => !prevUpdatePage)
     }
 
+    const handleArchiveProjectClick = (projectSelected: string) => {
+        const confirmed = window.confirm(`Are you sure you want to archive the project "${projectSelected}"?`);
+    
+        if (confirmed) {
+            const fetchHTTP: string = "https://goldfish-app-jlmay.ondigitalocean.app/tasks/archive-project";
+            fetch(fetchHTTP, {
+                method: "PATCH",
+                headers: {
+                    "Authorization": jwtToken,
+                    "projectName": projectSelected
+                }
+            }).then(res => {
+                if(!res.ok) {
+                new Error("Unable to retrieve tasks.");
+                }
+                return res.text()
+            .then(() => {
+                setArchived(true);
+                    
+                })
+            })
+        } 
+    }
+
   return (
     <>
     <h2>{props.projectSelected}</h2>
@@ -99,6 +124,8 @@ function Tasks(props: Props) {
         {props.authority === "66446a0b97b346b20fd35b73" ? <TaskColumn taskList={inProgressTasks} columnStatus="In Progress" projectName={props.projectSelected} updateTaskView={updateTaskView}/> : <TaskColumnUser taskList={inProgressTasks} columnStatus="In Progress" projectName={props.projectSelected} updateTaskView={updateTaskView}/>}
         {props.authority === "66446a0b97b346b20fd35b73" ? <TaskColumn taskList={completeTasks} columnStatus="Complete" projectName={props.projectSelected} updateTaskView={updateTaskView}/> : <TaskColumnUser taskList={completeTasks} columnStatus="Complete" projectName={props.projectSelected} updateTaskView={updateTaskView}/>}
     </div>
+    {props.authority === "66446a0b97b346b20fd35b73" ? <button onClick={() => handleArchiveProjectClick(props.projectSelected)}>Archive Project</button> : null }
+    {archived === true ? <p>{props.projectSelected} has been arvhived.</p> : null}
     </>
   )
 }
