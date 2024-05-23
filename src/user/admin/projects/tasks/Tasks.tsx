@@ -45,7 +45,7 @@ function Tasks(props: Props) {
     }, [jwtToken, props.projectSelected, updatePage]);
 
     const getTasks = () => {
-        const fetchHTTP: string = "https://goldfish-app-jlmay.ondigitalocean.app/user/tasks";
+        const fetchHTTP: string = "https://goldfish-app-jlmay.ondigitalocean.app/task/tasks";
         fetch(fetchHTTP, {
             method: "GET",
             headers: {
