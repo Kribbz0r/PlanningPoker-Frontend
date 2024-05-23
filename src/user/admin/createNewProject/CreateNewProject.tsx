@@ -49,22 +49,25 @@ function CreateNewProject() {
     }
 
     async function submitNewTaskFetch(taskName: string) {
-        const fetchHTTP: string = "https://goldfish-app-jlmay.ondigitalocean.app/tasks/new-task";
-        await fetch(fetchHTTP, {
-            method: "POST",
-            headers: {
-                "Authorization": jwtToken,
-                "projectName": projectName,
-                "taskName": taskName
-            }
-        }).then(res => {
-            if(!res.ok) {
-              new Error("Unable to submit task.");
-            }
-            return res.text();            
-          }).catch((error) => {
-            console.log(error)
-          });
+
+        if (taskName.trim() !== "") {
+            const fetchHTTP: string = "https://goldfish-app-jlmay.ondigitalocean.app/tasks/new-task";
+            await fetch(fetchHTTP, {
+                method: "POST",
+                headers: {
+                    "Authorization": jwtToken,
+                    "projectName": projectName,
+                    "taskName": taskName
+                }
+            }).then(res => {
+                if(!res.ok) {
+                  new Error("Unable to submit task.");
+                }
+                return res.text();            
+              }).catch((error) => {
+                console.log(error)
+              });
+        }
     }
 
     async function handleReleaseProjectClick(): Promise<void> {

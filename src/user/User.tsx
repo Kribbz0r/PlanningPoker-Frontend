@@ -51,7 +51,7 @@ function User() {
   return (
     <div>
         <p>Hej {username}!</p>
-        { userAuthority === "66446a0b97b346b20fd35b73" ? <Admin /> : <Employee /> }
+        { userAuthority === "66446bd997b346b20fd35b74" ? <Employee /> : <Admin /> }
     </div>
   )
 }
