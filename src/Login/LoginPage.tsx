@@ -1,4 +1,4 @@
-import { useState }from 'react';
+import { FormEvent, useState }from 'react';
 
 
 
@@ -13,45 +13,44 @@ function LoginPage({ onLogin }: LoginPageProps) {
     const frontPageImg = "https://cdn.pixabay.com/photo/2022/10/31/13/50/aces-7559882_960_720.png";
     const [error, setError] = useState<string>("");
   
-    function handleSubmit(e: React.MouseEvent<HTMLButtonElement>, email: string, password: string): void {
+    function handleSubmit(e: FormEvent<HTMLFormElement>, email: string, password: string): void {
     e.preventDefault();
   
         fetch("https://goldfish-app-jlmay.ondigitalocean.app/security/login", {
             method: "POST",
             headers: {
-            "content-type": "application/json",
+            "Content-Type": "application/json",
             "Origin": "*"
             },
-            body: JSON.stringify({ email, password })
+            body: JSON.stringify({ 
+                "email": email, 
+                "password": password })
         })
         .then(res => {
-            if (res.ok) {
-                res.text()
-                .then(data => {
-                    console.log(data)
-                    const token = data
-                    localStorage.setItem('jsonwebtoken', token)
-                    onLogin(token);
-                    setEmail("")
-                    setPassword("")
-                })
-            } else {
-                console.log("The server could not return a string for you");
-                setError("Incorrect username or password");
+            if (!res.ok) {
+                new Error("Incorrect username or password");
             }
-        })
+            return res.text()
+        }).then(data => {
+            const token = data
+            localStorage.setItem('jsonwebtoken', token)
+            onLogin(token);
+            setEmail("")
+            setPassword("")
+        }).catch((error) => {
+            setError(error)
+        });
     }
 
     return (
     <>
         <img src={frontPageImg} className="frontPageImg" />
-
-        <div className="loginForm">
+        <form className="loginForm" onSubmit={(e) => handleSubmit(e, email, password)}>
           <input type="text" value={email} onChange={((e) => setEmail(e.target.value))}></input>
-          <input type="text" value={password} onChange={((e) => setPassword(e.target.value))}></input>
-          <button type="submit" onClick={(e) => handleSubmit(e, email, password)}>Logga in</button>
+          <input type="password" value={password} onChange={((e) => setPassword(e.target.value))}></input>
+          <button type="submit">Logga in</button>
           <p>{error}</p>
-        </div>
+        </form>
         <img src={frontPageImg} className="frontPageImg" />
     </>
     );

@@ -1,0 +1,20 @@
+#taskColumnDiv {
+    border: 1px solid black;
+    border-radius: 10px;
+    background: linear-gradient(45deg, #8B4513, #D2B48C, #556B2F);
+    padding: 0 20px 10px 20px;
+    color: gold;
+    margin: 20px;
+}
+
+.taskTables {
+    text-align: center;
+}
+
+.taskTableRows {
+    margin: 0 10px 0 10px;
+}
+
+thead {
+    font-size: large;
+}
