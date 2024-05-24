@@ -12,8 +12,8 @@ interface User {
 function User() {
 
     const [userAuthority, setUserAuthority] = useState<string>("");
-    const [jwtToken, setJwtToken] = useState<string>("");
     const [username, setUsername] = useState<string>("");
+    const [jwtToken, setJwtToken] = useState<string>("");
     
 
     useEffect (() => {
@@ -35,23 +35,17 @@ function User() {
         headers: {
           "Authorization": jwtToken
         }
-      }).then(res => {
-        if(!res.ok) {
-          new Error("No user found!");
-        }
-        return res.json();
-      }).then(data => {
+      }).then(res => res.json())
+      .then(data => {
         setUserAuthority(data.role);
         setUsername(data.name);
-      }).catch((error) => {
-        console.log(error)
-      });
+      })
     }
 
   return (
     <div>
         <p>Hej {username}!</p>
-        { userAuthority === "66446bd997b346b20fd35b74" ? <Employee /> : <Admin /> }
+        { userAuthority === "66446bd997b346b20fd35b74" ? <Employee /> : <Admin userAuthority={userAuthority}/> }
     </div>
   )
 }

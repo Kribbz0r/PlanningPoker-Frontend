@@ -5,7 +5,11 @@ interface Projects {
     projects: string[]
 }
 
-function Projects() {
+interface Props {
+    authority: string
+}
+
+function Projects(props: Props) {
     
     const [projectList, setProjectList] = useState<string[]>([]);
     const [projectSelected, setProjectSelected] = useState<string>("");
@@ -38,14 +42,8 @@ function Projects() {
         .then(data => {
             setProjectList(data.projects);
         })
-        }).catch((error) => {
-            console.log(error)
         });
     }
-
-    useEffect (() => {
-        console.log(projectList)
-    }, [projectList]);
 
     return (
         <div>
@@ -53,7 +51,7 @@ function Projects() {
                 <button key={project} onClick={() => setProjectSelected(project)}>{project}</button>
             ))
             }
-            { projectSelected !== "" ? <Tasks projectSelected={projectSelected}/> : null}
+            { projectSelected !== "" ? <Tasks projectSelected={projectSelected} authority={props.authority}/> : null}
         </div>
     );
 }
