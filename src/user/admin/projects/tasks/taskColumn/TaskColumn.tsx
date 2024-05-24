@@ -88,6 +88,7 @@ function TaskColumn(props: Props) {
             props.updateTaskView();
             setEstimatedTime({})
             setFinalTime({});
+
         });
     }
 
@@ -110,15 +111,15 @@ function TaskColumn(props: Props) {
                             <td>Approved Votes</td>
                         </tr>
                     </thead>
-                
-                {props.taskList.map((task:Task) => (
                 <tbody>
-                    <tr className="tasktTableRows">
+                {props.taskList.map((task:Task) => (
+                    <tr key={task._id} className="tasktTableRows">
                         <td>{task.task}</td>
                         <td style={{color: task.votes.toString() !== totalVotes ? "red": "green"}}>{task.votes} / {totalVotes}</td>
                         <td style={{color: task.approvalvotes.toString() !== totalVotes ? "red": "green"}}>{task.approvalvotes} / {totalVotes}</td>
                     </tr>
-                </tbody>))}
+                ))}
+                </tbody>
             </table> :
             props.columnStatus === "Needs Attention" ? 
             <table className="taskTables">

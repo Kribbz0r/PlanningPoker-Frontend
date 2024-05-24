@@ -6,6 +6,7 @@ import TaskColumnUser from './taskColumnUser/TaskColumnUser';
 interface Props {
     projectSelected: string
     authority: string
+    setPage: () => void
 }
 
 interface Task {
@@ -108,7 +109,7 @@ function Tasks(props: Props) {
                 return res.text()
             .then(() => {
                 setArchived(true);
-                    
+                props.setPage();
                 })
             })
         } 

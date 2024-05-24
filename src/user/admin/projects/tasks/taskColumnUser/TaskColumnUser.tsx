@@ -87,19 +87,18 @@ function TaskColumnUser(props: Props) {
         } else if (!task.usersthathaveapproved.includes(userEmail)) {
             task.usersthathaveapproved.push(userEmail);
             task.approvalvotes += 1;
-
+            console.log(action);
             if (action === "true") {
                 task.disapproved = true;
-            } else if (!task.disapproved && task.usersthathaveapproved.length === parseInt(totalVotes)) {
+            } else if (task.disapproved === false && task.usersthathaveapproved.length === parseInt(totalVotes)) {
                 task.estimatedTime = getAverageTime(task.suggestedTimes);
             }
         }
-        console.log("votes: ", task.votes)
         
-        console.log(task.votes);
-        console.log(task.approvalvotes);
-        console.log(task.usersthathavevoted);
+        console.log(task.usersthathaveapproved.length, totalVotes)
+        console.log(task.approvalvotes, totalVotes);
         console.log(task.usersthathaveapproved);
+        console.log(task.disapproved);
 
         const fetchHTTP = "https://goldfish-app-jlmay.ondigitalocean.app/tasks/edit-task";
         fetch(fetchHTTP, {
@@ -115,7 +114,7 @@ function TaskColumnUser(props: Props) {
                 "task": task.task,
                 "status": task.status,
                 "estimatedTime": task.estimatedTime,
-                "finalTime": null,
+                "finalTime": task.finalTime,
                 "votes": task.votes,
                 "approvalvotes": task.approvalvotes,
                 "suggestedTimes": task.suggestedTimes,
@@ -161,8 +160,9 @@ function TaskColumnUser(props: Props) {
                 <tbody key={task._id}>
                     <tr className="tasktTableRows">
                         <td>{task.task}</td>
-                        <td>
-                            {task.usersthathavevoted.includes(userEmail) && parseInt(totalVotes) === task.votes ? (
+                        <td>{task.usersthathaveapproved.includes(userEmail) && parseInt(totalVotes) !== task.approvalvotes ? (
+                                "Waiting for approval votes"
+                            ) : task.usersthathavevoted.includes(userEmail) && parseInt(totalVotes) === task.votes ? (
                                 <>
                                     <span>Suggested Time: {getAverageTime(task.suggestedTimes)}</span>
                                     <button onClick={() => handleSelectedTimeClick(task, "false")}>Approve</button>
@@ -170,8 +170,6 @@ function TaskColumnUser(props: Props) {
                                 </>
                             ) : task.usersthathavevoted.includes(userEmail) && parseInt(totalVotes) !== task.votes ? (
                                 "Waiting for votes"
-                            ) : task.usersthathaveapproved.includes(userEmail) && parseInt(totalVotes) !== task.approvalvotes ? (
-                                "Waiting for approval votes"
                             ) : (
                                 <>
                                     <button onClick={() => handleSelectedTimeClick(task, "2")}>2 hours</button>

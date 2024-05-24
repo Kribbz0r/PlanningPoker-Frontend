@@ -21,7 +21,9 @@ function Employee() {
 
   return (
     <div>
-      <Projects authority={""} />
+      <Projects authority={""} setPage={function (): void {
+        throw new Error("Function not implemented.");
+      } } />
     </div>
   )
 }
