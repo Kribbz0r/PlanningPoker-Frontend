@@ -7,6 +7,7 @@ interface Projects {
 
 interface Props {
     authority: string
+    setPage: () => void
 }
 
 function Projects(props: Props) {
@@ -27,9 +28,9 @@ function Projects(props: Props) {
         getProjects();
     }, [jwtToken]);
 
-    const getProjects = () => {
+    const getProjects = async () => {
         const fetchHTTP: string = "https://goldfish-app-jlmay.ondigitalocean.app/tasks/get-projects";
-        fetch(fetchHTTP, {
+        await fetch(fetchHTTP, {
             method: "GET",
             headers: {
                 "Authorization": jwtToken
@@ -51,7 +52,7 @@ function Projects(props: Props) {
                 <button key={project} onClick={() => setProjectSelected(project)}>{project}</button>
             ))
             }
-            { projectSelected !== "" ? <Tasks projectSelected={projectSelected} authority={props.authority}/> : null}
+            { projectSelected !== "" ? <Tasks projectSelected={projectSelected} authority={props.authority} setPage={props.setPage}/> : null}
         </div>
     );
 }

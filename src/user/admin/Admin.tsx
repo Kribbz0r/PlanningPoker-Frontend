@@ -12,6 +12,10 @@ function Admin(props: Props) {
   
  const [page, setPage] = useState<string>("employees")
 
+ const updatePageFromArchive = () => {
+  setPage("employees");
+ }
+
   return (
     <div>
       <div className="adminButtonDiv">
@@ -20,7 +24,7 @@ function Admin(props: Props) {
         <button onClick={() => setPage("createNewProject")}>Create Project</button>
       </div>
       <div className="adminBody">
-        {page === "employees" ? <Employees/> : page === "projects" ? <Projects authority={props.userAuthority}/> : <CreateNewProject/>  }
+        {page === "employees" ? <Employees/> : page === "projects" ? <Projects authority={props.userAuthority} setPage={updatePageFromArchive}/> : <CreateNewProject/>  }
       </div>
     </div>
   
