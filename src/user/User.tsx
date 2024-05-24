@@ -14,7 +14,7 @@ function User() {
     const [userAuthority, setUserAuthority] = useState<string>("");
     const [jwtToken, setJwtToken] = useState<string>("");
     const [username, setUsername] = useState<string>("");
-    const [email, setEmail] = useState<string>("");
+    
 
     useEffect (() => {
         let jsonwebtoken: string | null = "";
@@ -41,10 +41,8 @@ function User() {
         }
         return res.json();
       }).then(data => {
-        console.log(data);
         setUserAuthority(data.role);
         setUsername(data.name);
-        setEmail(data.email);
       }).catch((error) => {
         console.log(error)
       });
@@ -52,8 +50,8 @@ function User() {
 
   return (
     <div>
-        <p>Hej {username + ", " + email}</p>
-        { userAuthority === "66446a0b97b346b20fd35b73" ? <Admin /> : <Employee /> }
+        <p>Hej {username}!</p>
+        { userAuthority === "66446bd997b346b20fd35b74" ? <Employee /> : <Admin /> }
     </div>
   )
 }
