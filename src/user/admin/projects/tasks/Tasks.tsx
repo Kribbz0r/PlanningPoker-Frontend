@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
 import TaskColumn from './taskColumn/TaskColumn';
 import "./tasks.css";
+import TaskColumnUser from './taskColumnUser/TaskColumnUser';
 
 interface Props {
     projectSelected: string
+    authority: string
 }
 
 interface Task {
@@ -14,9 +16,10 @@ interface Task {
     "finalTime": number,
     "votes": number,
     "approvalvotes": number,
-    "suggestedTimes": number[],
-    "userthathavevoted": string[],
-    "disapproved": boolean
+    "suggestedTimes": string[],
+    "usersthathavevoted": string[],
+    "disapproved": boolean,
+    "usersthathaveapproved": string[]
 }
 
 function Tasks(props: Props) {
@@ -28,6 +31,7 @@ function Tasks(props: Props) {
     const [message, setMessage] = useState<string[]>([])
     const [jwtToken, setJwtToken] = useState<string>("");
     const [updatePage, setUpdatePage] = useState<boolean>(false)
+    const [archived, setArchived] = useState<boolean>(false);
     
     useEffect (() => {
         let jsonwebtoken: string | null = "";
@@ -38,12 +42,11 @@ function Tasks(props: Props) {
     }, []);
 
     useEffect (() => {
-        console.log(updatePage)
         getTasks();
     }, [jwtToken, props.projectSelected, updatePage]);
 
     const getTasks = () => {
-        const fetchHTTP: string = "https://goldfish-app-jlmay.ondigitalocean.app/user/tasks";
+        const fetchHTTP: string = "https://goldfish-app-jlmay.ondigitalocean.app/tasks/get-tasks";
         fetch(fetchHTTP, {
             method: "GET",
             headers: {
@@ -80,22 +83,35 @@ function Tasks(props: Props) {
                 setMessage(errorList);
             })
         })
-        }).catch((error) => {
-            console.log(error)
         });
     }
 
-    useEffect(() => {
-        console.log(underVoteTasks);
-        console.log(needAttentionTasks);
-        console.log(inProgressTasks);
-        console.log(completeTasks);
-        console.log(message);
-    }, [underVoteTasks])
-
     const updateTaskView = () => {
-        console.log(updatePage)
         setUpdatePage(prevUpdatePage => !prevUpdatePage)
+    }
+
+    const handleArchiveProjectClick = (projectSelected: string) => {
+        const confirmed = window.confirm(`Are you sure you want to archive the project "${projectSelected}"?`);
+    
+        if (confirmed) {
+            const fetchHTTP: string = "https://goldfish-app-jlmay.ondigitalocean.app/tasks/archive-project";
+            fetch(fetchHTTP, {
+                method: "PATCH",
+                headers: {
+                    "Authorization": jwtToken,
+                    "projectName": projectSelected
+                }
+            }).then(res => {
+                if(!res.ok) {
+                new Error("Unable to retrieve tasks.");
+                }
+                return res.text()
+            .then(() => {
+                setArchived(true);
+                    
+                })
+            })
+        } 
     }
 
   return (
@@ -103,11 +119,13 @@ function Tasks(props: Props) {
     <h2>{props.projectSelected}</h2>
     { message[0] !== null ? <p>{message}</p> : null}
     <div id='taskColumnsDiv'>
-        <TaskColumn taskList={underVoteTasks} columnStatus="Under Vote" projectName={props.projectSelected} updateTaskView={updateTaskView}/>
-        <TaskColumn taskList={needAttentionTasks} columnStatus="Needs Attention" projectName={props.projectSelected} updateTaskView={updateTaskView}/>
-        <TaskColumn taskList={inProgressTasks} columnStatus="In Progress" projectName={props.projectSelected} updateTaskView={updateTaskView}/>
-        <TaskColumn taskList={completeTasks} columnStatus="Complete" projectName={props.projectSelected} updateTaskView={updateTaskView}/>
+        {props.authority === "66446a0b97b346b20fd35b73" ? <TaskColumn taskList={underVoteTasks} columnStatus="Under Vote" projectName={props.projectSelected} updateTaskView={updateTaskView}/> : <TaskColumnUser taskList={underVoteTasks} columnStatus="Under Vote" projectName={props.projectSelected} updateTaskView={updateTaskView}/>}
+        {props.authority === "66446a0b97b346b20fd35b73" ? <TaskColumn taskList={needAttentionTasks} columnStatus="Needs Attention" projectName={props.projectSelected} updateTaskView={updateTaskView}/> : null }
+        {props.authority === "66446a0b97b346b20fd35b73" ? <TaskColumn taskList={inProgressTasks} columnStatus="In Progress" projectName={props.projectSelected} updateTaskView={updateTaskView}/> : <TaskColumnUser taskList={inProgressTasks} columnStatus="In Progress" projectName={props.projectSelected} updateTaskView={updateTaskView}/>}
+        {props.authority === "66446a0b97b346b20fd35b73" ? <TaskColumn taskList={completeTasks} columnStatus="Complete" projectName={props.projectSelected} updateTaskView={updateTaskView}/> : <TaskColumnUser taskList={completeTasks} columnStatus="Complete" projectName={props.projectSelected} updateTaskView={updateTaskView}/>}
     </div>
+    {props.authority === "66446a0b97b346b20fd35b73" ? <button onClick={() => handleArchiveProjectClick(props.projectSelected)}>Archive Project</button> : null }
+    {archived === true ? <p>{props.projectSelected} has been arvhived.</p> : null}
     </>
   )
 }
