@@ -16,17 +16,18 @@ interface Task {
     "finalTime": number,
     "votes": number,
     "approvalvotes": number,
-    "suggestedTimes": number[],
-    "userthathavevoted": string[],
-    "disapproved": boolean
+    "suggestedTimes": string[],
+    "usersthathavevoted": string[],
+    "disapproved": boolean,
+    "usersthathaveapproved": string[]
 }
 
 function TaskColumn(props: Props) {
 
     const [estimatedTime, setEstimatedTime] = useState<{[key: string]: string}>({});
-    const [jwtToken, setJwtToken] = useState<string>("");
     const [finalTime, setFinalTime] = useState<{[key: string]: string}>({});
     const [totalVotes, setTotalVotes] = useState<string>("");
+    const [jwtToken, setJwtToken] = useState<string>("");
 
     useEffect (() => {
         let jsonwebtoken: string | null = "";
@@ -41,33 +42,19 @@ function TaskColumn(props: Props) {
     }, [jwtToken])
     
     const getTotalVotes = () => {
-        console.log(jwtToken);
         const fetchHTTP = "https://goldfish-app-jlmay.ondigitalocean.app/user/number-with-access";
         fetch(fetchHTTP, {
             method: "GET",
             headers: {
                 "Authorization": jwtToken
             }
-        }).then(res => {
-            if(!res.ok) {
-                new Error("Unable to update estimated time");
-            }
-            return res.text();
-            }).then(data => {
-              console.log(data);
+        }).then(res => res.text())
+            .then(data => {
               setTotalVotes(data);
-          }).catch((error) => {
-              console.log(error)
           });
     }
 
     const handleSetTimeClick = (task: Task, ) => {       
-        // const id = task._id
-        // if (task.estimatedTime !== null) {
-        //     setEstimatedTime({id, value})
-        // }
-
-        console.log(estimatedTime[task._id])
     
         const fetchHTTP = "https://goldfish-app-jlmay.ondigitalocean.app/tasks/edit-task";
         fetch(fetchHTTP, {
@@ -87,23 +74,21 @@ function TaskColumn(props: Props) {
                 "votes": task.votes,
                 "approvalvotes": task.approvalvotes,
                 "suggestedTimes": task.suggestedTimes,
-                "usersthathavevoted": task.userthathavevoted,
-                "disapproved": task.disapproved
+                "usersthathavevoted": task.usersthathavevoted,
+                "disapproved": task.disapproved,
+                "usersthathaveapproved": task.usersthathaveapproved
             })
         }).then(res => {
             if(!res.ok) {
-              new Error("Unable to update estimated time");
               return res.text();
             } else {
                 return res.json();
             }
-          }).then(data => {
-            console.log(data);
-        }).catch((error) => {
+        }).catch(() => {
             props.updateTaskView();
             setEstimatedTime({})
             setFinalTime({});
-            console.log(error)
+
         });
     }
 
@@ -119,7 +104,6 @@ function TaskColumn(props: Props) {
             <>
             {props.columnStatus === "Under Vote" ? 
             <table className="taskTables">
-                
                     <thead>
                         <tr className="tasktTableRows">
                             <td>Task</td>
@@ -127,20 +111,20 @@ function TaskColumn(props: Props) {
                             <td>Approved Votes</td>
                         </tr>
                     </thead>
-                
-                {props.taskList.map((task:Task) => (
                 <tbody>
-                    <tr className="tasktTableRows">
+                {props.taskList.map((task:Task) => (
+                    <tr key={task._id} className="tasktTableRows">
                         <td>{task.task}</td>
                         <td style={{color: task.votes.toString() !== totalVotes ? "red": "green"}}>{task.votes} / {totalVotes}</td>
                         <td style={{color: task.approvalvotes.toString() !== totalVotes ? "red": "green"}}>{task.approvalvotes} / {totalVotes}</td>
                     </tr>
-                </tbody>))}
+                ))}
+                </tbody>
             </table> :
             props.columnStatus === "Needs Attention" ? 
             <table className="taskTables">
                     <thead>
-                        <tr className="tasktTableRows">
+                        <tr className="taskTableRows" style={{borderBottom:"solid 1px gold"}}>
                             <td>Task</td>
                             <td>Suggested Times</td>
                             <td>Users</td>
@@ -149,15 +133,15 @@ function TaskColumn(props: Props) {
                     </thead>
                     <tbody>
                     {props.taskList.map((task:Task) => (
-                        <tr className="tasktTableRows">
+                        <tr className="taskTableRows">
                             <td>{task.task}</td>
                             <td>
-                            {task.suggestedTimes.map((time: number) => (
+                            {task.suggestedTimes.map((time: string) => (
                                 <span key={time}>{time} hours<br/></span>
                             ))}
                             </td>
                             <td>
-                            {task.userthathavevoted.map((user: string) => (
+                            {task.usersthathavevoted?.map((user: string) => (
                                 <span key={user}>{user}<br/></span>
                             ))}
                             </td>
@@ -183,7 +167,7 @@ function TaskColumn(props: Props) {
                      <tr className="tasktTableRows">
                          <td>{task.task}</td>
                          <td>
-                         {task.userthathavevoted.map((user: string) => (
+                         {task.usersthathavevoted?.map((user: string) => (
                              <span key={user}>{user}<br/></span>
                          ))}
                          </td>
@@ -211,7 +195,7 @@ function TaskColumn(props: Props) {
                      <tr className="tasktTableRows">
                          <td>{task.task}</td>
                          <td>
-                         {task.userthathavevoted.map((user: string) => (
+                         {task.usersthathavevoted?.map((user: string) => (
                              <span key={user}>{user}<br/></span>
                          ))}
                          </td>

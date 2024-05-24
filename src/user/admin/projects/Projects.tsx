@@ -5,7 +5,12 @@ interface Projects {
     projects: string[]
 }
 
-function Projects() {
+interface Props {
+    authority: string
+    setPage: () => void
+}
+
+function Projects(props: Props) {
     
     const [projectList, setProjectList] = useState<string[]>([]);
     const [projectSelected, setProjectSelected] = useState<string>("");
@@ -23,9 +28,9 @@ function Projects() {
         getProjects();
     }, [jwtToken]);
 
-    const getProjects = () => {
+    const getProjects = async () => {
         const fetchHTTP: string = "https://goldfish-app-jlmay.ondigitalocean.app/tasks/get-projects";
-        fetch(fetchHTTP, {
+        await fetch(fetchHTTP, {
             method: "GET",
             headers: {
                 "Authorization": jwtToken
@@ -38,14 +43,8 @@ function Projects() {
         .then(data => {
             setProjectList(data.projects);
         })
-        }).catch((error) => {
-            console.log(error)
         });
     }
-
-    useEffect (() => {
-        console.log(projectList)
-    }, [projectList]);
 
     return (
         <div>
@@ -53,7 +52,7 @@ function Projects() {
                 <button key={project} onClick={() => setProjectSelected(project)}>{project}</button>
             ))
             }
-            { projectSelected !== "" ? <Tasks projectSelected={projectSelected}/> : null}
+            { projectSelected !== "" ? <Tasks projectSelected={projectSelected} authority={props.authority} setPage={props.setPage}/> : null}
         </div>
     );
 }

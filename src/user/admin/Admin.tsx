@@ -3,13 +3,18 @@ import Employees from "./employees/Employees";
 import Projects from "./projects/Projects";
 import CreateNewProject from "./createNewProject/CreateNewProject";
 
+interface Props {
+  userAuthority: string
+}
 
-function Admin() {
+
+function Admin(props: Props) {
   
  const [page, setPage] = useState<string>("employees")
 
-
- 
+ const updatePageFromArchive = () => {
+  setPage("employees");
+ }
 
   return (
     <div>
@@ -19,7 +24,7 @@ function Admin() {
         <button onClick={() => setPage("createNewProject")}>Create Project</button>
       </div>
       <div className="adminBody">
-        {page === "employees" ? <Employees/> : page === "projects" ? <Projects/> : <CreateNewProject/>  }
+        {page === "employees" ? <Employees/> : page === "projects" ? <Projects authority={props.userAuthority} setPage={updatePageFromArchive}/> : <CreateNewProject/>  }
       </div>
     </div>
   
