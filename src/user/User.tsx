@@ -1,53 +1,62 @@
-import {useEffect, useState } from 'react'
-import Admin from './admin/Admin'
-import Employee from './employee/Employee'
+import { useEffect, useState } from 'react';
+import Admin from './admin/Admin';
+import Employee from './employee/Employee';
 
 interface User {
-  email: string,
-  name: string,
-  authorized: number,
-  role: string
+  email: string;
+  name: string;
+  authorized: number;
+  role: string;
 }
 
 function User() {
+  const [userAuthority, setUserAuthority] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
+  const [jwtToken, setJwtToken] = useState<string>("");
 
-    const [userAuthority, setUserAuthority] = useState<string>("");
-    const [username, setUsername] = useState<string>("");
-    const [jwtToken, setJwtToken] = useState<string>("");
-    
+  useEffect(() => {
+    const jsonwebtoken = localStorage.getItem("jsonwebtoken");
+    if (jsonwebtoken) {
+      setJwtToken(jsonwebtoken);
+    }
+  }, []);
 
-    useEffect (() => {
-        let jsonwebtoken: string | null = "";
-        if(localStorage.getItem("jsonwebtoken") && jsonwebtoken !== null) {
-            jsonwebtoken = localStorage.getItem("jsonwebtoken");
-            setJwtToken(jsonwebtoken!);
-        }
-    }, []);
-
-    useEffect (() => {
+  useEffect(() => {
+    if (jwtToken) {
       getUserInformation();
-    }, [jwtToken]);
+    }
+  }, [jwtToken]);
 
-    const getUserInformation = () => {
-      const fetchHTTP: string = "https://goldfish-app-jlmay.ondigitalocean.app/user/get-user";
-      fetch(fetchHTTP, {
+  const getUserInformation = async () => {
+    try {
+      const fetchHTTP = "https://goldfish-app-jlmay.ondigitalocean.app/user/get-user";
+      const response = await fetch(fetchHTTP, {
         method: "GET",
         headers: {
-          "Authorization": jwtToken
-        }
-      }).then(res => res.json())
-      .then(data => {
-        setUserAuthority(data.role);
-        setUsername(data.name);
-      })
+          "Authorization": jwtToken,
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Unable to retrieve user information.");
+      }
+      const data = await response.json();
+      setUserAuthority(data.role);
+      setUsername(data.name);
+    } catch (error) {
+      console.error('Error fetching user information:', error);
     }
+  };
 
   return (
     <div>
-        <p>Hej {username}!</p>
-        { userAuthority === "66446bd997b346b20fd35b74" ? <Employee /> : <Admin userAuthority={userAuthority}/> }
+      <p>Hej {username}!</p>
+      {userAuthority === "66446bd997b346b20fd35b74" ? (
+        <Employee />
+      ) : (
+        <Admin userAuthority={userAuthority} />
+      )}
     </div>
-  )
+  );
 }
 
-export default User
+export default User;
