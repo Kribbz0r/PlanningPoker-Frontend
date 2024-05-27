@@ -50,11 +50,9 @@ function Tasks(props: Props) {
     }, [jwtTokenTasks, props.projectSelected, updatePage]);
 
     useEffect(() => {
-        if (props.authority !== "") {
             getTotalVotes();
-        } else {
             getUserInformation();
-        }
+        
     }, [jwtTokenTasks]);
 
     const getUserInformation = () => {
