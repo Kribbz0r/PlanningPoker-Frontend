@@ -6,6 +6,7 @@ interface Props {
     columnStatus: string
     updateTaskView: () => void
     projectName: string
+    totalVotes: string
 }
 
 interface Task {
@@ -26,7 +27,6 @@ function TaskColumn(props: Props) {
 
     const [estimatedTime, setEstimatedTime] = useState<{[key: string]: string}>({});
     const [finalTime, setFinalTime] = useState<{[key: string]: string}>({});
-    const [totalVotes, setTotalVotes] = useState<string>("");
     const [jwtToken, setJwtToken] = useState<string>("");
 
     useEffect (() => {
@@ -36,23 +36,6 @@ function TaskColumn(props: Props) {
             setJwtToken(jsonwebtoken!);
         }
     }, []);
-
-    useEffect (() => {
-        getTotalVotes();
-    }, [jwtToken])
-    
-    const getTotalVotes = () => {
-        const fetchHTTP = "https://goldfish-app-jlmay.ondigitalocean.app/user/number-with-access";
-        fetch(fetchHTTP, {
-            method: "GET",
-            headers: {
-                "Authorization": jwtToken
-            }
-        }).then(res => res.text())
-            .then(data => {
-              setTotalVotes(data);
-          });
-    }
 
     const handleSetTimeClick = (task: Task, ) => {       
     
@@ -115,8 +98,8 @@ function TaskColumn(props: Props) {
                 {props.taskList.map((task:Task) => (
                     <tr key={task._id} className="tasktTableRows">
                         <td>{task.task}</td>
-                        <td style={{color: task.votes.toString() !== totalVotes ? "red": "green"}}>{task.votes} / {totalVotes}</td>
-                        <td style={{color: task.approvalvotes.toString() !== totalVotes ? "red": "green"}}>{task.approvalvotes} / {totalVotes}</td>
+                        <td style={{color: task.votes.toString() !== props.totalVotes ? "red": "green"}}>{task.votes} / {props.totalVotes}</td>
+                        <td style={{color: task.approvalvotes.toString() !== props.totalVotes ? "red": "green"}}>{task.approvalvotes} / {props.totalVotes}</td>
                     </tr>
                 ))}
                 </tbody>
