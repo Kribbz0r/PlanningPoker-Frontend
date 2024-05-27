@@ -7,6 +7,8 @@ interface Props {
     columnStatus: string
     updateTaskView: () => void
     projectName: string
+    totalVotes: string
+    userEmail: string
 }
 
 interface Task {
@@ -24,9 +26,7 @@ interface Task {
 }
 
 function TaskColumnUser(props: Props) {
-    const [jwtToken, setJwtToken] = useState<string>("");
-    const [totalVotes, setTotalVotes] = useState<string>("");
-    const [userEmail, setUserEmail] = useState<string>("");
+    const [jwtTokenTaskColumnUser, setJwtToken] = useState<string>("");
 
     useEffect (() => {
         let jsonwebtoken: string | null = "";
@@ -36,77 +36,32 @@ function TaskColumnUser(props: Props) {
         }
     }, []);
 
-    useEffect (() => {
-        getTotalVotes();
-        getUserInformation();
-    }, [jwtToken])
-
-    const getUserInformation = () => {
-        const fetchHTTP: string = "https://goldfish-app-jlmay.ondigitalocean.app/user/get-user";
-        fetch(fetchHTTP, {
-          method: "GET",
-          headers: {
-            "Authorization": jwtToken
-          }
-        }).then(res => {
-          if(!res.ok) {
-            new Error("No user found!");
-          }
-          return res.json();
-        }).then(data => {
-          setUserEmail(data.email)
-        });
-      }
-    
-    const getTotalVotes = () => {
-        const fetchHTTP = "https://goldfish-app-jlmay.ondigitalocean.app/user/number-with-access";
-        fetch(fetchHTTP, {
-            method: "GET",
-            headers: {
-                "Authorization": jwtToken
-            }
-        }).then(res => {
-            if(!res.ok) {
-                new Error("Unable to update estimated time");
-            }
-            return res.text();
-            }).then(data => {
-              setTotalVotes(data);
-          });
-    }
-
     const handleSelectedTimeClick = (task: Task, action: string) => {
 
         if (!task.usersthathavevoted) task.usersthathavevoted = [];
         if (!task.usersthathaveapproved) task.usersthathaveapproved = [];
 
-        if (!task.usersthathavevoted.includes(userEmail)) {
-            task.usersthathavevoted.push(userEmail);
+        if (!task.usersthathavevoted.includes(props.userEmail)) {
+            task.usersthathavevoted.push(props.userEmail);
             task.votes += 1;
             task.suggestedTimes.push(action);
-        } else if (!task.usersthathaveapproved.includes(userEmail)) {
-            task.usersthathaveapproved.push(userEmail);
+        } else if (!task.usersthathaveapproved.includes(props.userEmail)) {
+            task.usersthathaveapproved.push(props.userEmail);
             task.approvalvotes += 1;
-            console.log(action);
             if (action === "true") {
                 task.disapproved = true;
-            } else if (task.disapproved === false && task.usersthathaveapproved.length === parseInt(totalVotes)) {
+            } else if (task.disapproved === false && task.usersthathaveapproved.length === parseInt(props.totalVotes)) {
                 task.estimatedTime = getAverageTime(task.suggestedTimes);
             }
         }
-        
-        console.log(task.usersthathaveapproved.length, totalVotes)
-        console.log(task.approvalvotes, totalVotes);
-        console.log(task.usersthathaveapproved);
-        console.log(task.disapproved);
 
         const fetchHTTP = "https://goldfish-app-jlmay.ondigitalocean.app/tasks/edit-task";
         fetch(fetchHTTP, {
             method: "PATCH",
             headers: {
-                "Authorization": jwtToken,
+                "Authorization": jwtTokenTaskColumnUser,
                 "projectName": props.projectName,
-                "userEmail": userEmail,
+                "userEmail": props.userEmail,
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
@@ -160,15 +115,15 @@ function TaskColumnUser(props: Props) {
                 <tbody key={task._id}>
                     <tr className="tasktTableRows">
                         <td>{task.task}</td>
-                        <td>{task.usersthathaveapproved.includes(userEmail) && parseInt(totalVotes) !== task.approvalvotes ? (
+                        <td>{task.usersthathaveapproved.includes(props.userEmail) && parseInt(props.totalVotes) !== task.approvalvotes ? (
                                 "Waiting for approval votes"
-                            ) : task.usersthathavevoted.includes(userEmail) && parseInt(totalVotes) === task.votes ? (
+                            ) : task.usersthathavevoted.includes(props.userEmail) && parseInt(props.totalVotes) === task.votes ? (
                                 <>
                                     <span>Suggested Time: {getAverageTime(task.suggestedTimes)}</span>
                                     <button onClick={() => handleSelectedTimeClick(task, "false")}>Approve</button>
                                     <button onClick={() => handleSelectedTimeClick(task, "true")}>Disapprove</button>
                                 </>
-                            ) : task.usersthathavevoted.includes(userEmail) && parseInt(totalVotes) !== task.votes ? (
+                            ) : task.usersthathavevoted.includes(props.userEmail) && parseInt(props.totalVotes) !== task.votes ? (
                                 "Waiting for votes"
                             ) : (
                                 <>
