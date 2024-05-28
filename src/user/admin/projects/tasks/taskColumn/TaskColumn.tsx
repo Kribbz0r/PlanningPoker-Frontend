@@ -84,7 +84,6 @@ function TaskColumn(props: Props) {
   return (
     <div id="taskColumnDiv">
             <h2>{props.columnStatus}</h2>
-            <>
             {props.columnStatus === "Under Vote" ? 
             <table className="taskTables">
                     <thead>
@@ -98,8 +97,8 @@ function TaskColumn(props: Props) {
                 {props.taskList.map((task:Task) => (
                     <tr key={task._id} className="tasktTableRows">
                         <td>{task.task}</td>
-                        <td style={{color: task.votes.toString() !== props.totalVotes ? "red": "green"}}>{task.votes} / {props.totalVotes}</td>
-                        <td style={{color: task.approvalvotes.toString() !== props.totalVotes ? "red": "green"}}>{task.approvalvotes} / {props.totalVotes}</td>
+                        <td style={{color: task.votes.toString() !== props.totalVotes ? "red": "lightgreen"}}>{task.votes} / {props.totalVotes}</td>
+                        <td style={{color: task.approvalvotes.toString() !== props.totalVotes ? "red": "lightgreen"}}>{task.approvalvotes} / {props.totalVotes}</td>
                     </tr>
                 ))}
                 </tbody>
@@ -184,13 +183,12 @@ function TaskColumn(props: Props) {
                          </td>
                          <td>{task.estimatedTime} hours</td>
                          <td>{task.finalTime} hours</td>
-                         <td style={{ color: task.estimatedTime >= task.finalTime ? "green" : "red"}}>
+                         <td style={{ color: task.estimatedTime >= task.finalTime ? "lightgreen" : "red"}}>
                          {Math.round(((task.finalTime - task.estimatedTime) / task.estimatedTime) * 100)}%
                          </td>
                      </tr>
                  </tbody>))} 
                 </table> : null}
-            </>
     </div>
   )
 }

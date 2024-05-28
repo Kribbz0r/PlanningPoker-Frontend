@@ -163,8 +163,8 @@ function Tasks(props: Props) {
     };
 
     return (
-        <>
-            <h2>{props.projectSelected}</h2>
+        <div id='projectSelectedDiv'>
+            <h2 id='projectSelectedHeader'>{props.projectSelected}</h2>
             { message[0] !== null ? <p>{message}</p> : null}
             <div id='taskColumnsDiv'>
                 {props.authority === "66446a0b97b346b20fd35b73" ? (
@@ -230,11 +230,11 @@ function Tasks(props: Props) {
                         userEmail={userEmail}/>)}
                 </div>
                 {props.authority === "66446a0b97b346b20fd35b73" ? 
-                    <button onClick={() => handleArchiveProjectClick(props.projectSelected)}>Archive Project</button> 
+                    <button id="archiveButton" onClick={() => handleArchiveProjectClick(props.projectSelected)}>Archive Project</button> 
                     :
                     null }
                 {archived === true ? <p>{props.projectSelected} has been arvhived.</p> : null}
-        </>
+        </div>
   )
 }
 

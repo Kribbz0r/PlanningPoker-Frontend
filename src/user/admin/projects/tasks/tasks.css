@@ -1,5 +1,23 @@
 #taskColumnsDiv {
+    width: 100vw;
+    max-width: 100%;
+    overflow-x: scroll;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    margin-bottom: 1%;
+}
+
+#projectSelectedHeader {
+    width: fit-content;
+    margin: auto;
+}
+
+#projectSelectedDiv {
+    width: 100%;
+    margin-bottom: 3%;
+}
+
+#archiveButton {
+    margin-left: 1%;
 }

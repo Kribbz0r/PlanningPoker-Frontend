@@ -4,23 +4,34 @@
 }
 
 .header {
-  background-color: aquamarine;
+  position: relative;
+  background-image: url('./images/cardHeader.jpg'); 
+  background-size: cover; 
+  background-position: center;
+  height: 20vh; 
   width: 100vw;
-  height: 15vh;
   display: flex;
   text-align: center;
   justify-content: flex-start;
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.5);
+  z-index: 1;
 }
 
-.loggedOutHeader {
-  width: 100vw;
+.body {
+  background-image: url('./images/greenBackground.jpg'); 
+  background-size: cover; 
+  background-position: center;
   display: flex;
+  height: 85vh;
+  align-items: center;
   justify-content: space-evenly;
-  align-self: center;
-  text-align: center;
+  position: relative;
+  overflow: scroll;
+  margin-top: -10px; 
+  box-shadow: 0px -20px 20px rgba(0, 0, 0, 0.5); 
+  z-index: 0;
 }
 
-.loggedOutHeaderText {}
 
 .loggedInHeader {
   width: 100vw;
@@ -30,14 +41,13 @@
 }
 
 .loggedInHeaderText {
+  color: whitesmoke;
   width: 70vw;
   margin-left: 15vw;
 }
 
-
 .logoutBtn {
   align-self: center;
-  color: aqua;
   width: 10vw;
   margin-right: 5vw;
   justify-content: end;
@@ -45,13 +55,4 @@
 
 .loginForm {
   display: grid;
-}
-
-.body {
-  background-color: burlywood;
-  display: flex;
-  height: 85vh;
-  align-items: center;
-  justify-content: space-evenly;
-
 }
