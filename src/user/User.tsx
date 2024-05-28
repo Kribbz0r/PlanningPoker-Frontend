@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import Admin from './admin/Admin';
 import Employee from './employee/Employee';
+import "./user.css"
 
 interface User {
   email: string;
@@ -48,13 +49,15 @@ function User() {
   };
 
   return (
-    <div>
-      <p>Hej {username}!</p>
-      {userAuthority === "66446bd997b346b20fd35b74" ? (
-        <Employee />
-      ) : (
-        <Admin userAuthority={userAuthority} />
-      )}
+    <div id='userDiv'>
+      <div id='usernameDiv'>
+        <h2 id='username'>Hi {username}!</h2>
+      </div>
+        {userAuthority === "66446bd997b346b20fd35b74" ? (
+          <Employee />
+        ) : (
+          <Admin userAuthority={userAuthority} />
+        )}
     </div>
   );
 }

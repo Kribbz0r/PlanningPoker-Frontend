@@ -1,5 +1,5 @@
 import { FormEvent, useState }from 'react';
-
+import "./loginPage.css"
 
 
 interface LoginPageProps {
@@ -44,11 +44,12 @@ function LoginPage({ onLogin }: LoginPageProps) {
 
     return (
     <>
-        <img src={frontPageImg} className="frontPageImg" />
+        <img src={frontPageImg} className="frontPageImg"/>
         <form className="loginForm" onSubmit={(e) => handleSubmit(e, email, password)}>
-          <input type="text" value={email} onChange={((e) => setEmail(e.target.value))}></input>
-          <input type="password" value={password} onChange={((e) => setPassword(e.target.value))}></input>
-          <button type="submit">Logga in</button>
+            <h2>Log In</h2>
+          <input className="loginInputs" placeholder='@email' type="text" value={email} onChange={((e) => setEmail(e.target.value))}></input>
+          <input className="loginInputs" placeholder="password" type="password" value={password} onChange={((e) => setPassword(e.target.value))}></input>
+          <button type="submit">Log in</button>
           <p>{error}</p>
         </form>
         <img src={frontPageImg} className="frontPageImg" />

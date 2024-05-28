@@ -21,16 +21,11 @@ function App() {
   return (
     <>
       <div className="header" >
-        {loginStatus === true ? 
         <div className="loggedInHeader">  
           <h1 className='loggedInHeaderText'>Planning Poker</h1> 
-          <button onClick={handleLogOut} className='logoutBtn'>Logga ut</button> 
+        {loginStatus === true ? 
+          <button onClick={handleLogOut} title="Log out" className='logoutBtn'>Log out</button> : null }
         </div> 
-        :
-        <div className='loggedOutHeader'> 
-          <h1 className="loggedOutHeaderText">Planning Poker</h1>
-        </div>
-        }
       </div>
       <div className="body">
         {loginStatus === false ? <LoginPage onLogin={handleLogin} /> : null}

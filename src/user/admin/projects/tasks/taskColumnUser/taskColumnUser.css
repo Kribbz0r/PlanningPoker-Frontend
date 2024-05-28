@@ -1,9 +1,9 @@
 #taskColumnDiv {
     border: 1px solid black;
     border-radius: 10px;
-    background: linear-gradient(45deg, #8B4513, #D2B48C, #556B2F);
+    background-color: rgba(128, 128, 128, 0.5);
     padding: 0 20px 10px 20px;
-    color: gold;
+    color: white;
     margin: 20px;
 }
 
@@ -13,9 +13,23 @@
 
 tr {
     margin: 0 10px 0 10px;
-    border-bottom: 1px solid gold;
+    border-bottom: 1px solid white;
 }
 
 thead {
     font-size: large;
+}
+
+.tdUnderVote {
+    width: 60%;
+}
+
+.tickCross {
+    cursor: pointer;
+    height: 30px;
+    margin: 0 15px 0 15px;
+}
+
+.suggestedTimesSpan {
+    margin-right: 15px;
 }
