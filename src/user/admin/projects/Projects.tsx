@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Tasks from "./tasks/Tasks";
+import "./projects.css"
 
 interface Projects {
   projects: string[];
@@ -48,9 +49,9 @@ function Projects(props: Props) {
   };
 
   return (
-    <div>
+    <div id="projectsDiv">
       {projectList.map((project: string) => (
-        <button key={project} onClick={() => setProjectSelected(project)}>
+        <button className="projectButtons" key={project} onClick={() => setProjectSelected(project)}>
           {project}
         </button>
       ))}

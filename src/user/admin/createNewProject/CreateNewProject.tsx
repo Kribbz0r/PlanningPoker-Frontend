@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import "./createNewProject.css"
+import deleteIcon from "./images/deleteIcon.png"
 
 function CreateNewProject() {
 
@@ -76,27 +78,28 @@ function CreateNewProject() {
     }
 
     return (
-        <>
-            <p>{message}</p>
-            {!projectCreated ? <form onSubmit={(e) => handleSubmit(e)}>
-                <h3>Create New Project</h3>
+        <div id="createNewDiv">
+            <h2>Create New Project</h2>
+            {!projectCreated ? <form  id="createForm" onSubmit={(e) => handleSubmit(e)}>
+                <h3>{message}</h3>
                 <input placeholder="Project Name" value={projectName} onChange={((e) => setProjectName(e.target.value))}/>
                 <button type="submit">Submit</button>
-            </form>  : 
-            <form onSubmit={(e) => handleSubmit(e)}>
+            </form> : 
+            <form id="taskForm" onSubmit={(e) => handleSubmit(e)}>
+                <h3>{message}</h3>
                 <input className="taskInput" placeholder="task" value={taskName} onChange={((e) => setTaskName(e.target.value))}/>
                 <button type="submit">Add task</button>
+                <table>
+                { taskList.length > 0 ? taskList.map((taskName: string) => (
+                    <tr>
+                        <td key={taskName}><h3 className="taskNames">{taskName}</h3></td>
+                        <td key={"remove" + taskName} onClick={() => handleRemoveTaskClick(taskName)}><img className="deleteIcons" src={deleteIcon}/></td>
+                    </tr>
+                )) : null}
+                </table>
+                { taskList.length > 0 ? <button type="button" onClick={handleReleaseProjectClick}>Release Project</button> : null}            
             </form>}
-            <table>
-            { taskList.length > 0 ? taskList.map((taskName: string) => (
-                <tr>
-                    <td key={taskName}>{taskName}</td>
-                    <td key={"remove" + taskName} onClick={() => handleRemoveTaskClick(taskName)}>X</td>
-                </tr>
-            )) : null}
-            </table>
-            { taskList.length > 0 ? <button type="button" onClick={handleReleaseProjectClick}>Release Project</button> : null}            
-        </>
+        </div>
     );
 }
 

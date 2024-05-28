@@ -1,4 +1,7 @@
 import { useEffect, useState } from 'react';
+import greenChip from "./images/greenChip.png"
+import redChip from "./images/redChip.png"
+import "./employees.css"
 
 interface User {
   email: string;
@@ -62,25 +65,32 @@ function Employees() {
   };
 
   return (
-    <div>
-      <table>
-        <thead>
+    <div id='employeesTableDiv'>
+      <h2 id='employeesHeader'>Employees</h2>
+      <table id='employeesTable'>
+        <thead id='tableHeadEmployees'>
           <tr>
             <td>Name</td>
             <td>Email</td>
             <td>Access</td>
           </tr>
         </thead>
-        <tbody>
+        <tbody id='tableBodyEmployees'>
           {employeesList.map((user: User) => (
             <tr key={user.email}>
               <td>{user.name}</td>
               <td>{user.email}</td>
               <td>
                 {user.authorized === 0 ? (
-                  <button onClick={() => handleClick(user.email)}>Go</button>
+                  <div className='chipImageDiv'>
+                    <img className='chipImage' src={redChip}/>
+                    <div className='hoverText' onClick={() => handleClick(user.email)}>Grant Access</div>
+                  </div>
                 ) : (
-                  <button onClick={() => handleClick(user.email)}>Stop</button>
+                  <div className='chipImageDiv'>
+                    <img className='chipImage' src={greenChip}/>
+                    <div className='hoverText' onClick={() => handleClick(user.email)}>Remove Access</div>
+                  </div>
                 )}
               </td>
             </tr>

@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import "./taskColumnUser.css"
+import greenTick from "./images/greenTick.png"
+import redCross from "./images/redCross.png"
 
 
 interface Props {
@@ -108,20 +110,20 @@ function TaskColumnUser(props: Props) {
             <thead>
                 <tr className="tasktTableRows">
                     <td>Task</td>
-                    <td>Action Needed</td>
+                    <td className="tdUnderVote">Action Needed</td>
                 </tr>
             </thead>
             {props.taskList.map((task: Task) => (
                 <tbody key={task._id}>
                     <tr className="tasktTableRows">
                         <td>{task.task}</td>
-                        <td>{task.usersthathaveapproved.includes(props.userEmail) && parseInt(props.totalVotes) !== task.approvalvotes ? (
+                        <td className="tdUnderVote">{task.usersthathaveapproved.includes(props.userEmail) && parseInt(props.totalVotes) !== task.approvalvotes ? (
                                 "Waiting for approval votes"
                             ) : task.usersthathavevoted.includes(props.userEmail) && parseInt(props.totalVotes) === task.votes ? (
                                 <>
-                                    <span>Suggested Time: {getAverageTime(task.suggestedTimes)}</span>
-                                    <button onClick={() => handleSelectedTimeClick(task, "false")}>Approve</button>
-                                    <button onClick={() => handleSelectedTimeClick(task, "true")}>Disapprove</button>
+                                    <span className="suggestedTimesSpan">Suggested Time: {getAverageTime(task.suggestedTimes)}</span>
+                                    <img className="tickCross" src={greenTick} alt="Disapprove suggested time." title="Dispprove suggested time." onClick={() => handleSelectedTimeClick(task, "false")}/>
+                                    <img className="tickCross" src={redCross} alt="Approve suggested time." title="Approve suggested time." onClick={() => handleSelectedTimeClick(task, "true")}/>
                                 </>
                             ) : task.usersthathavevoted.includes(props.userEmail) && parseInt(props.totalVotes) !== task.votes ? (
                                 "Waiting for votes"
@@ -169,7 +171,7 @@ function TaskColumnUser(props: Props) {
                          <td>{task.task}</td>
                          <td>{task.estimatedTime} hours</td>
                          <td>{task.finalTime} hours</td>
-                         <td style={{ color: task.estimatedTime >= task.finalTime ? "green" : "red"}}>
+                         <td style={{ color: task.estimatedTime >= task.finalTime ? "lightgreen" : "red"}}>
                          {Math.round(((task.finalTime - task.estimatedTime) / task.estimatedTime) * 100)}%
                          </td>
                      </tr>
