@@ -72,9 +72,9 @@ function Tasks(props: Props) {
         });
       }
 
-    const getTotalVotes = () => {
+    const getTotalVotes = async () => {
         const fetchHTTP = "https://goldfish-app-jlmay.ondigitalocean.app/user/number-with-access";
-        fetch(fetchHTTP, {
+        await fetch(fetchHTTP, {
             method: "GET",
             headers: {
                 "Authorization": jwtTokenTasks
