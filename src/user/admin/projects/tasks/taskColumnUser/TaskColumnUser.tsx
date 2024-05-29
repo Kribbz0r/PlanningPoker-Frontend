@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import "./taskColumnUser.css"
 import greenTick from "./images/greenTick.png"
 import redCross from "./images/redCross.png"
+import twoHours from "./images/twoHours.png"
+import fourHours from "./images/fourHours.png"
+import eightHours from "./images/eightHours.png"
+import sixteenHours from "./images/sixteenHours.png"
 
 
 interface Props {
@@ -128,12 +132,24 @@ function TaskColumnUser(props: Props) {
                             ) : task.usersthathavevoted.includes(props.userEmail) && parseInt(props.totalVotes) !== task.votes ? (
                                 "Waiting for votes"
                             ) : (
-                                <>
-                                    <button onClick={() => handleSelectedTimeClick(task, "2")}>2 hours</button>
-                                    <button onClick={() => handleSelectedTimeClick(task, "4")}>4 hours</button>
-                                    <button onClick={() => handleSelectedTimeClick(task, "8")}>8 hours</button>
-                                    <button onClick={() => handleSelectedTimeClick(task, "16")}>16 hours</button>
-                                </>
+                                <div id="cardsDiv">
+                                    <div className="cards">
+                                        <img src={twoHours}/>
+                                        <div className='hoverTextCard' onClick={() => handleSelectedTimeClick(task, "2")}>2 hours</div>
+                                    </div>
+                                    <div className="cards">
+                                        <img src={fourHours}/>
+                                        <div className='hoverTextCard' onClick={() => handleSelectedTimeClick(task, "4")}>4 hours</div>
+                                    </div>
+                                    <div className="cards">
+                                        <img src={eightHours}/>
+                                        <div className='hoverTextCard' onClick={() => handleSelectedTimeClick(task, "8")}>8 hours</div>
+                                    </div>
+                                    <div className="cards">
+                                        <img src={sixteenHours}/>
+                                        <div className='hoverTextCard' onClick={() => handleSelectedTimeClick(task, "16")}>16 hours</div>
+                                    </div>
+                                </div>
                             )}
                         </td>
                     </tr>

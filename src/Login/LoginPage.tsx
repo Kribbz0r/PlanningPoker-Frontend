@@ -28,15 +28,21 @@ function LoginPage({ onLogin }: LoginPageProps) {
         })
         .then(res => {
             if (!res.ok) {
-                new Error("Incorrect username or password");
+                new Error("Incorrect email or password");
             }
             return res.text()
         }).then(data => {
-            const token = data
-            localStorage.setItem('jsonwebtoken', token)
-            onLogin(token);
-            setEmail("")
-            setPassword("")
+            console.log(data)
+            if (!data.includes("Error")) {
+                console.log("success")
+                const token = data
+                localStorage.setItem('jsonwebtoken', token)
+                onLogin(token);
+                setEmail("")
+                setPassword("")
+            } else {
+                setError("Incorrect email or password");
+            }
         }).catch((error) => {
             setError(error)
         });
