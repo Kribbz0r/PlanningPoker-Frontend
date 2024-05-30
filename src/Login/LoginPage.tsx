@@ -34,7 +34,7 @@ function LoginPage({ onLogin }: LoginPageProps) {
         }).then(data => {
             if (data.includes("Error")) {
                 setError("Incorrect email or password");
-            } else if (data.includes("permission")) {
+            } else if (data.includes("permission") || data.includes("Incorrect")) {
                 setError(data); 
             } else {
                 const token = data
