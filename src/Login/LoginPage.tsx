@@ -32,13 +32,11 @@ function LoginPage({ onLogin }: LoginPageProps) {
             }
             return res.text()
         }).then(data => {
-            console.log(data)
             if (data.includes("Error")) {
                 setError("Incorrect email or password");
             } else if (data.includes("permission")) {
                 setError(data); 
             } else {
-                console.log("success")
                 const token = data
                 localStorage.setItem('jsonwebtoken', token)
                 onLogin(token);
