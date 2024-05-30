@@ -39,7 +39,6 @@ function TaskColumn(props: Props) {
 
     const handleSetTimeClick = (task: Task, ) => {  
 
-        console.log(estimatedTime[task._id], finalTime[task._id].toString())
         const numberPattern = /^(?:[1-9]|[1-3][0-9])$/;
 
         if (numberPattern.test(estimatedTime[task._id]) || numberPattern.test(finalTime[task._id])) {
