@@ -37,42 +37,49 @@ function TaskColumn(props: Props) {
         }
     }, []);
 
-    const handleSetTimeClick = (task: Task, ) => {       
-    
-        const fetchHTTP = "https://goldfish-app-jlmay.ondigitalocean.app/tasks/edit-task";
-        fetch(fetchHTTP, {
-            method: "PATCH",
-            headers: {
-                "Authorization": jwtToken,
-                "projectName": props.projectName,
-                "userEmail": "",
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                "taskId": task._id,
-                "task": task.task,
-                "status": task.status,
-                "estimatedTime": task.estimatedTime !== null ? task.estimatedTime : estimatedTime[task._id],
-                "finalTime": finalTime === null ? task.finalTime : finalTime[task._id],
-                "votes": task.votes,
-                "approvalvotes": task.approvalvotes,
-                "suggestedTimes": task.suggestedTimes,
-                "usersthathavevoted": task.usersthathavevoted,
-                "disapproved": task.disapproved,
-                "usersthathaveapproved": task.usersthathaveapproved
-            })
-        }).then(res => {
-            if(!res.ok) {
-              return res.text();
-            } else {
-                return res.json();
-            }
-        }).catch(() => {
-            props.updateTaskView();
-            setEstimatedTime({})
-            setFinalTime({});
+    const handleSetTimeClick = (task: Task, ) => {  
 
-        });
+        console.log(estimatedTime[task._id], finalTime[task._id].toString())
+        const numberPattern = /^(?:[1-9]|[1-3][0-9])$/;
+
+        if (numberPattern.test(estimatedTime[task._id]) || numberPattern.test(finalTime[task._id])) {
+            const fetchHTTP = "https://goldfish-app-jlmay.ondigitalocean.app/tasks/edit-task";
+            fetch(fetchHTTP, {
+                method: "PATCH",
+                headers: {
+                    "Authorization": jwtToken,
+                    "projectName": props.projectName,
+                    "userEmail": "",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    "taskId": task._id,
+                    "task": task.task,
+                    "status": task.status,
+                    "estimatedTime": task.estimatedTime !== null ? task.estimatedTime : estimatedTime[task._id],
+                    "finalTime": finalTime === null ? task.finalTime : finalTime[task._id],
+                    "votes": task.votes,
+                    "approvalvotes": task.approvalvotes,
+                    "suggestedTimes": task.suggestedTimes,
+                    "usersthathavevoted": task.usersthathavevoted,
+                    "disapproved": task.disapproved,
+                    "usersthathaveapproved": task.usersthathaveapproved
+                })
+            }).then(res => {
+                if(!res.ok) {
+                  return res.text();
+                } else {
+                    return res.json();
+                }
+            }).catch(() => {
+                props.updateTaskView();
+                setEstimatedTime({})
+                setFinalTime({});
+    
+            })
+        } else {
+            alert("Only numbers 1 - 40 may be entered as estimated or final time")
+        }
     }
 
     function handleInputChange(_id: string, value: string, setEstimatedTime: Dispatch<SetStateAction<{ [key: string]: string; }>>): void {
